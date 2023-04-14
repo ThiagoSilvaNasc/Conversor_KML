@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Conversor de Coordenadas para KML</title>
+    <script>
+      function converteCoordenadas() {
+        // Recupera as coordenadas inseridas pelo usuário
+        var coordenadas = document.getElementById("coordenadas").value;
+
+        // Divide o campo de texto em coordenadas separadas
+        var listaCoordenadas = coordenadas.split("\n");
+
+        // Cria o conteúdo do arquivo KML
+        var conteudoKML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        conteudoKML += "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n";
+
+        conteudoKML += "<Placemark>\n";
+        conteudoKML += "<name>Saframax_Generator</name>\n"
+        conteudoKML += "<LineString>\n";
+        conteudoKML += "<extrude>1</extrude>";
+        conteudoKML += "<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>\n";
+        conteudoKML += "<coordinates>\n";
+
+        // Cria um marcador KML para cada coordenada
+        for (var i = 0; i < listaCoordenadas.length; i++) {
+          var coordenada = listaCoordenadas[i].trim().split(",");
+          if (coordenada.length == 3) {
+            var latitude = coordenada[0];
+            var longitude = coordenada[1];
+            var altitude = coordenada[2];
+
+
+            conteudoKML += longitude + "," + latitude + "," + altitude + "\n";
+
+          }
+        }
+        conteudoKML += "</coordinates>\n";
+        conteudoKML += "</LineString>\n";
+        conteudoKML += "</Placemark>\n";
+        conteudoKML += "</kml>";
+
+        // Cria o arquivo KML para download
+        var linkDownload = document.createElement("a");
+        linkDownload.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(conteudoKML));
+        linkDownload.setAttribute("download", "minhas_coordenadas.kml");
+        linkDownload.style.display = "none";
+        document.body.appendChild(linkDownload);
+        linkDownload.click();
+        document.body.removeChild(linkDownload);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Conversor de Coordenadas para KML</h1>
+    <form>
+      <label for="coordenadas">Coordenadas (separadas por quebra de linha):</label>
+      <p></p>
+      <textarea id="coordenadas" name="coordenadas" rows="40" cols="50" ></textarea><br>
+      <p></p>
+      <button type="button" onclick="converteCoordenadas()">Converter para KML</button>
+    </form>
+  </body>
+</html>
